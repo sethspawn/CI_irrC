@@ -49,3 +49,24 @@ future_lapply(sub_dirs, function(sub_dir){
   })
   
 })
+
+# from: https://github.com/Envirometrix/BigSpatialDataR
+tmp.lst = list.files(path = file.path(layer),
+                     pattern = ".tif$",
+                     full.names = T,
+                     recursive = T)
+
+
+## only 3178 tiles with values
+out.tmp <- tempfile(fileext = ".txt")
+vrt.tmp <- tempfile(fileext = ".vrt")
+cat(tmp.lst, sep="\n", file=out.tmp)
+system(paste0('gdalbuildvrt -input_file_list ', out.tmp, ' ', vrt.tmp))
+system(paste0('gdalwarp ', vrt.tmp, 
+              ' \"./ocs_0-30cm_Q0.05.tif\" ', 
+              '-ot \"Int16\" -dstnodata \"-32767\" -co \"BIGTIFF=YES\" ',  
+              '-multi -wm 2000 -co \"COMPRESS=DEFLATE\" -overwrite ',
+              '-r \"near\" -wo \"NUM_THREADS=ALL_CPUS\"'))
+
+require(raster)
+raster('ocs_0-30cm_Q0.05.tif')
