@@ -18,9 +18,9 @@ Sys.setenv('GDAL_DATA' = 'C:\OSGeo4W\share\gdal')
 main_url = 'https://files.isric.org'
 parent_dir = 'soilgrids/latest/data'
 
-variable = 'clay'
-depth = '0-5cm'
-metric = 'Q0.05'
+variable = 'ocs'
+depth = '0-30cm'
+metric = 'Q0.95'
 
 #===============================================================================
 layer = paste(variable, depth, metric, sep = '_')
@@ -51,9 +51,7 @@ future_lapply(sub_dirs, function(sub_dir){
   
 })
 
-plan(sequential)
 
-layer = 'ocs_0-30cm_Q0.95'
 # from: https://github.com/Envirometrix/BigSpatialDataR
 tmp.lst = list.files(path = file.path(layer),
                      pattern = ".tif$",
@@ -72,6 +70,6 @@ system(paste0('gdalwarp ', vrt.tmp,
               '-r \"near\" -wo \"NUM_THREADS=ALL_CPUS\"'))
 
 require(raster)
-r = raster('clay_0-5cm_Q0.05.tif')
+r = raster(paste0(layer,'.tif'))
 plot(r)
 
