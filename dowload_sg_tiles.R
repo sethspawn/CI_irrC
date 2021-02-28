@@ -12,8 +12,6 @@ packages = c(
 install.packages(setdiff(packages, rownames(installed.packages()))) 
 lapply(packages, require, character.only = TRUE)
 
-Sys.getenv()
-Sys.setenv('GDAL_DATA' = 'C:\OSGeo4W\share\gdal')
 #===============================================================================
 main_url = 'https://files.isric.org'
 parent_dir = 'soilgrids/latest/data'
